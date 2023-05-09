@@ -14,7 +14,7 @@ export function Menu() {
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="flex flex-wrap items-center justify-between mx-auto p-8">
         <a href="/" className="flex items-center">
           <DocumentCheckIcon className="w-7 h-7 mr-2" />
           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
