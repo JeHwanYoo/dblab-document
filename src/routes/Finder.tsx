@@ -3,13 +3,12 @@ import { TreeItem, TreeView } from '@mui/lab'
 import { useNavigate } from 'react-router-dom'
 import { Article, Folder, FolderOpen } from '@mui/icons-material'
 import { CircularProgress } from '@mui/material'
+import { createEditorURL, Leaf, Tree } from '../lib/util'
 
 interface Item {
   id: string
   name: string
 }
-
-type Tree = { [p: string]: Tree | string }
 
 const mockItems: Item[] = [
   {
@@ -38,7 +37,10 @@ export function Finder() {
       let nestedObj: Tree = acc
       nameParts.forEach((part, index) => {
         if (index === nameParts.length - 1) {
-          nestedObj[part] = item.id
+          nestedObj[part] = {
+            id: item.id,
+            path: nameParts.slice(0, -1).join('/'),
+          }
         } else {
           nestedObj[part] = nestedObj[part] || {}
           nestedObj = nestedObj[part] as Tree
@@ -50,7 +52,7 @@ export function Finder() {
 
   function renderTree(root: Tree) {
     return Object.entries(root).map(([key, value]) => {
-      if (typeof value === 'object') {
+      if (!value.id) {
         return (
           <TreeItem
             key={key}
@@ -59,7 +61,7 @@ export function Finder() {
             collapseIcon={<FolderOpen />}
             expandIcon={<Folder />}
           >
-            {renderTree(value)}
+            {renderTree(value as Tree)}
           </TreeItem>
         )
       }
@@ -70,7 +72,7 @@ export function Finder() {
           nodeId={key}
           label={key}
           icon={<Article />}
-          onClick={() => navigate(`/editor?id=${value}&filename=${key}`)}
+          onClick={() => navigate(createEditorURL(value as Leaf, key))}
         />
       )
     })

@@ -1,10 +1,11 @@
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 
-export function createDocument(id: string, name: string): Y.Doc {
+export function createDocument(id: string, path: string, name: string): Y.Doc {
   const doc = new Y.Doc()
   const info = doc.getMap('info')
   info.set('id', id)
+  info.set('path', path)
   info.set('name', name)
   return doc
 }

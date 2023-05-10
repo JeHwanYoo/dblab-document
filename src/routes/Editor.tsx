@@ -8,11 +8,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material'
 import { CloudOff, CloudQueue } from '@mui/icons-material'
 import { uuidv4 } from 'lib0/random'
+import { createEditorURL } from '../lib/util'
 
 export function Editor() {
   const [provider, setProvider] = useState<WebrtcProvider | null>(null)
   const [doc, setDoc] = useState<Document | null>(null)
   const [filename, setFilename] = useState<string | null>(null)
+  const [path, setPath] = useState<string | null>(null)
   const location = useLocation()
   const navigate = useNavigate()
   const component = useRef<ReactQuill>(null)
@@ -20,12 +22,19 @@ export function Editor() {
   useEffect(() => {
     const querystring = new URLSearchParams(location.search)
     const _filename = querystring.get('filename')
+    const _path = querystring.get('path')
 
     if (!_filename) {
-      navigate(`/editor?id=${uuidv4()}&filename=새문서`, { replace: true })
+      const uuid = uuidv4()
+      navigate(createEditorURL({ id: uuid, path: '' }, '새문서' + uuid), {
+        replace: true,
+      })
+
+      setPath('')
     }
 
     setFilename(_filename as string)
+    setPath(_path)
 
     return () => {
       provider?.disconnect()
@@ -39,31 +48,41 @@ export function Editor() {
     const querystring = new URLSearchParams(location.search)
     const _filename = querystring.get('filename')
     const _id = querystring.get('id')
+    const _path = querystring.get('path')
 
     if (!_id) {
       navigate('/notfound', { replace: true })
     }
 
     if (_filename && _filename !== filename) {
-      const path = `/editor?id=${_id}&filename=${filename}`
+      const path = createEditorURL(
+        { id: _id as string, path: _path as string },
+        filename
+      )
       window.history.pushState({ path }, '', path)
     }
 
     if (!provider && !doc) {
       const editor = component?.current?.editor
-      const _doc = createDocument(_id as string, _filename as string)
+      const _doc = createDocument(
+        _id as string,
+        _path as string,
+        _filename as string
+      )
       const _provider: WebrtcProvider = joinRoom(_doc)
 
       new QuillBinding(_doc.getText('quill'), editor, _provider.awareness)
 
-      _doc?.on('update', (message, origin, doc) => {
+      _doc?.on('update', (_, __, doc) => {
         const info = doc.getMap('info')
         const name = info.get('name')
+        const path = info.get('path')
         const clientId = info.get('eventFrom')
 
         if (_provider.awareness.clientID === clientId) return
 
         setFilename(name)
+        setPath(path)
       })
 
       setProvider(_provider)
