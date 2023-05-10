@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { TreeItem, TreeView } from '@mui/lab'
 import { useNavigate } from 'react-router-dom'
-import { uuidv4 } from 'lib0/random'
 import { Article, Folder, FolderOpen } from '@mui/icons-material'
 import { CircularProgress } from '@mui/material'
 
@@ -14,15 +13,15 @@ type Tree = { [p: string]: Tree | string }
 
 const mockItems: Item[] = [
   {
-    id: uuidv4(),
+    id: '789f2c68-ccfc-475e-bad9-e253ac3f43a7',
     name: '부동산 리포트/11월/report-1.md',
   },
   {
-    id: uuidv4(),
+    id: 'b3557005-15af-4b48-8804-aa5b1474fd74',
     name: '부동산 리포트/11월/report-2.md',
   },
   {
-    id: uuidv4(),
+    id: '329274e7-6415-4454-bff3-e6b76869d9cd',
     name: '부동산 리포트/12월/report.md',
   },
 ]
@@ -50,8 +49,7 @@ export function Finder() {
   }
 
   function renderTree(root: Tree) {
-    return Object.keys(root).map((key) => {
-      const value = root[key]
+    return Object.entries(root).map(([key, value]) => {
       if (typeof value === 'object') {
         return (
           <TreeItem
@@ -72,7 +70,7 @@ export function Finder() {
           nodeId={key}
           label={key}
           icon={<Article />}
-          onClick={() => navigate(`/editor?filename=${key}`)}
+          onClick={() => navigate(`/editor?id=${value}&filename=${key}`)}
         />
       )
     })

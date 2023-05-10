@@ -1,18 +1,19 @@
 import * as Y from 'yjs'
 import { WebrtcProvider } from 'y-webrtc'
 
-export interface Document {
-  name: string
-  instance: Y.Doc
+export function createDocument(id: string, name: string): Y.Doc {
+  const doc = new Y.Doc()
+  const info = doc.getMap('info')
+  info.set('id', id)
+  info.set('name', name)
+  return doc
 }
 
-export function createDocument(name: string): Document {
-  return {
-    name,
-    instance: new Y.Doc(),
-  }
+export function joinRoom(document: Y.Doc, wsOpts?: object) {
+  const info = document.getMap('info')
+  const id = info.get('id') as string
+
+  return new WebrtcProvider(id, document, wsOpts)
 }
 
-export function joinRoom(document: Document, wsOpts?: object) {
-  return new WebrtcProvider(document.name, document.instance, wsOpts)
-}
+export type Document = Y.Doc
