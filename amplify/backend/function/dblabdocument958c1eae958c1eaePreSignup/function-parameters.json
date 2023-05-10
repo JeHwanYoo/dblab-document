@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "email-filter-allowlist"
+  ],
+  "parentResource": "dblabdocument958c1eae958c1eae",
+  "functionName": "dblabdocument958c1eae958c1eaePreSignup",
+  "resourceName": "dblabdocument958c1eae958c1eaePreSignup",
+  "parentStack": "auth",
+  "triggerEnvs": "[]",
+  "triggerDir": "/snapshot/repo/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/PreSignup",
+  "triggerTemplate": "PreSignup.json.ejs",
+  "triggerEventPath": "PreSignup.event.json",
+  "roleName": "dblabdocument958c1eae958c1eaePreSignup",
+  "skipEdit": true
+}

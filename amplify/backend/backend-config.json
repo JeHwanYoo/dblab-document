@@ -1,1 +1,105 @@
-{}
+{
+  "auth": {
+    "dblabdocument958c1eae958c1eae": {
+      "customAuth": false,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "dblabdocument958c1eae958c1eaePreSignup",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "ON",
+        "mfaTypes": [
+          "SMS",
+          "TOTP"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL",
+          "NAME",
+          "NICKNAME"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "dblabdocument958c1eae958c1eaePreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "dblabdocumenta6887761a6887761PreSignup": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_dblabdocument958c1eae958c1eaePreSignup_DOMAINALLOWLIST": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocument958c1eae958c1eaePreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_dblabdocument958c1eae958c1eaePreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocument958c1eae958c1eaePreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_dblabdocument958c1eae958c1eaePreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocument958c1eae958c1eaePreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_dblabdocumenta6887761a6887761PreSignup_DOMAINALLOWLIST": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocumenta6887761a6887761PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_dblabdocumenta6887761a6887761PreSignup_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocumenta6887761a6887761PreSignup"
+        }
+      ]
+    },
+    "AMPLIFY_function_dblabdocumenta6887761a6887761PreSignup_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dblabdocumenta6887761a6887761PreSignup"
+        }
+      ]
+    }
+  }
+}

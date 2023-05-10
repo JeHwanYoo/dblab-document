@@ -9,7 +9,25 @@
       "UnauthRoleName": "amplify-dblabdocument-main-221750-unauthRole",
       "StackName": "amplify-dblabdocument-main-221750",
       "StackId": "arn:aws:cloudformation:ap-northeast-2:138588746315:stack/amplify-dblabdocument-main-221750/10dae700-ef35-11ed-a6ac-067d1f9a94f6",
-      "AmplifyAppId": "d1x31xglss7lnt"
+      "AmplifyAppId": "d1x31xglss7lnt",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-dblabdocument-main-221750-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "function": {
+        "dblabdocumenta6887761a6887761PreSignup": {
+          "DOMAINALLOWLIST": "genmatefield.com",
+          "deploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
+          "s3Key": "amplify-builds/dblabdocumenta6887761a6887761PreSignup-644d6b71596348736148-build.zip"
+        },
+        "dblabdocument958c1eae958c1eaePreSignup": {
+          "DOMAINALLOWLIST": "genmatefield.com",
+          "deploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
+          "s3Key": "amplify-builds/dblabdocument958c1eae958c1eaePreSignup-716f327a323759796268-build.zip"
+        }
+      },
+      "auth": {
+        "dblabdocument958c1eae958c1eae": {}
+      }
     }
   }
 }

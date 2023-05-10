@@ -13,19 +13,29 @@ import '@fontsource/roboto/700.css'
 import { Amplify } from 'aws-amplify'
 import awsExports from './aws-exports'
 import NotFoundImage from './assets/404.jpg'
+import { withAuthenticator } from '@aws-amplify/ui-react'
+import '@aws-amplify/ui-react/styles.css'
 
 Amplify.configure(awsExports)
+
+const AuthApp = withAuthenticator(App)
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
+    <AuthApp />
+  </React.StrictMode>
+)
+
+function App() {
+  return (
     <main>
       <BrowserRouter>
         <AppDrawer title="DBLab Document" body={Body} />
       </BrowserRouter>
     </main>
-  </React.StrictMode>
-)
+  )
+}
 
 function Body() {
   return (
