@@ -14,7 +14,7 @@ export function Editor() {
   const [provider, setProvider] = useState<WebrtcProvider | null>(null)
   const [doc, setDoc] = useState<Document | null>(null)
   const [filename, setFilename] = useState<string | null>(null)
-  const [path, setPath] = useState<string | null>(null)
+  const [filepath, setFilepath] = useState<string | null>(null)
   const location = useLocation()
   const navigate = useNavigate()
   const component = useRef<ReactQuill>(null)
@@ -30,11 +30,11 @@ export function Editor() {
         replace: true,
       })
 
-      setPath('')
+      setFilepath('')
     }
 
     setFilename(_filename as string)
-    setPath(_path)
+    setFilepath(_path)
 
     return () => {
       provider?.disconnect()
@@ -75,28 +75,45 @@ export function Editor() {
 
       _doc?.on('update', (_, __, doc) => {
         const info = doc.getMap('info')
-        const name = info.get('name')
-        const path = info.get('path')
-        const clientId = info.get('eventFrom')
+        const _name = info.get('name')
+        const _path = info.get('path')
+        const renameFilenameId = info.get('rename:filename')
+        const renamePathId = info.get('rename:path')
 
-        if (_provider.awareness.clientID === clientId) return
+        if (
+          renameFilenameId &&
+          _provider.awareness.clientID !== renameFilenameId
+        ) {
+          setFilename(_name)
+        }
 
-        setFilename(name)
-        setPath(path)
+        if (renamePathId && _provider.awareness.clientID !== renamePathId) {
+          setFilepath(_path)
+        }
       })
 
       setProvider(_provider)
       setDoc(_doc)
     } else {
       const info = doc?.getMap('info')
-      const name = info?.get('name')
+      const _name = info?.get('name')
 
-      if (filename !== name) {
-        info?.set('eventFrom', provider?.awareness.clientID)
+      if (filename !== _name) {
+        info?.set('rename:filename', provider?.awareness.clientID)
         info?.set('name', filename)
       }
     }
   }, [filename])
+
+  useEffect(() => {
+    const info = doc?.getMap('info')
+    const _path = info?.get('path')
+
+    if (filepath !== _path) {
+      info?.set('rename:path', provider?.awareness.clientID)
+      info?.set('path', filepath)
+    }
+  }, [filepath])
 
   return (
     <section>
@@ -114,14 +131,23 @@ export function Editor() {
         </section>
         <section className="my-4">
           <FormControl fullWidth>
-            <InputLabel htmlFor="outlined-adornment-amount">
-              파일 이름
-            </InputLabel>
+            <InputLabel htmlFor="outlined-filename">파일 이름</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-amount"
-              label="Amount"
+              id="outlined-filename"
+              label="filename"
               value={filename ?? ''}
               onChange={(event) => setFilename(event.target.value)}
+            />
+          </FormControl>
+        </section>
+        <section className="my-4">
+          <FormControl fullWidth>
+            <InputLabel htmlFor="outlined-filename">파일 경로</InputLabel>
+            <OutlinedInput
+              id="outlined-path"
+              label="path"
+              value={filepath ?? ''}
+              onChange={(event) => setFilepath(event.target.value)}
             />
           </FormControl>
         </section>
