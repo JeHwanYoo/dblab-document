@@ -17,7 +17,7 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { useNavigate } from 'react-router-dom'
-import { routes } from './index'
+import { routes } from '../../routes'
 
 const drawerWidth = 240
 
@@ -91,7 +91,7 @@ const Drawer = styled(MuiDrawer, {
 }))
 
 interface Props {
-  body: React.ReactNode
+  body: React.FunctionComponent
   title: string
 }
 
@@ -108,7 +108,7 @@ export function AppDrawer(props: Props) {
     setOpen(false)
   }
 
-  const BodyStyled = styled('div')(() => ({}))
+  const MemoBody = React.memo(props.body)
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -128,7 +128,9 @@ export function AppDrawer(props: Props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            {props.title}
+            <a className="cursor-pointer" href="/">
+              {props.title}
+            </a>
           </Typography>
         </Toolbar>
       </AppBar>
@@ -174,7 +176,7 @@ export function AppDrawer(props: Props) {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
-        <BodyStyled>{props.body}</BodyStyled>
+        <MemoBody />
       </Box>
     </Box>
   )

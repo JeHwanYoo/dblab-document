@@ -10,15 +10,18 @@ import { CloudOff, CloudQueue } from '@mui/icons-material'
 
 export function Editor() {
   const [provider, setProvider] = useState<WebrtcProvider | null>(null)
+  const [filename, setFilename] = useState('')
   const location = useLocation()
   const component = useRef<ReactQuill>(null)
 
   useEffect(() => {
     const editor = component?.current?.editor
+    const querystring = new URLSearchParams(location.search)
+    const _filename = querystring.get('filename') as string
 
-    console.log(editor?.getModule('modules/cursors'))
+    setFilename(_filename)
 
-    const doc = createDocument('sample')
+    const doc = createDocument(_filename)
     const provider: WebrtcProvider = joinRoom(doc)
 
     setProvider(provider)
@@ -54,7 +57,7 @@ export function Editor() {
             <OutlinedInput
               id="outlined-adornment-amount"
               label="Amount"
-              value={location.state.filename}
+              value={filename}
             />
           </FormControl>
         </section>
