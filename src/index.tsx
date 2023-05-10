@@ -4,22 +4,34 @@ import './index.css'
 import reportWebVitals from './reportWebVitals'
 import { routes } from './routes'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Menu } from './routes/Menu'
+import { AppDrawer } from './routes/Drawer'
 import 'flowbite/dist/flowbite.js'
+import '@fontsource/roboto/300.css'
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   <React.StrictMode>
     <main>
       <BrowserRouter>
-        <Menu />
-        <section className="p-8">
-          <Routes>
-            {routes.map((route, index) => (
-              <Route key={index} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-        </section>
+        <AppDrawer
+          title="DBLab Document"
+          body={
+            <section className="p-8">
+              <Routes>
+                {routes.map((route, index) => (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={route.element}
+                  />
+                ))}
+              </Routes>
+            </section>
+          }
+        />
       </BrowserRouter>
     </main>
   </React.StrictMode>
