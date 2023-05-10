@@ -25,7 +25,6 @@ const items: Item[] = [
 ]
 
 export function Finder() {
-  const navigate = useNavigate()
   let root: Record<string, object> = {}
 
   function parseDepth(items: Item[]) {

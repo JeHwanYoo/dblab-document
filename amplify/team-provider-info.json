@@ -1,0 +1,15 @@
+{
+  "main": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-dblabdocument-main-221750-authRole",
+      "UnauthRoleArn": "arn:aws:iam::138588746315:role/amplify-dblabdocument-main-221750-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::138588746315:role/amplify-dblabdocument-main-221750-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
+      "UnauthRoleName": "amplify-dblabdocument-main-221750-unauthRole",
+      "StackName": "amplify-dblabdocument-main-221750",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:138588746315:stack/amplify-dblabdocument-main-221750/10dae700-ef35-11ed-a6ac-067d1f9a94f6",
+      "AmplifyAppId": "d1x31xglss7lnt"
+    }
+  }
+}
