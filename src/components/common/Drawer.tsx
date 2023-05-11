@@ -106,10 +106,12 @@ export function AppDrawer(props: Props) {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const navigate = useNavigate()
-  const [preferredColor, setPreferredColor] = useState<string | undefined>(
-    undefined
+  const [preferredColor, setPreferredColor] = useState<
+    string | undefined | null
+  >(localStorage.getItem('preferredColor'))
+  const [nickname, setNickname] = useState<string | undefined | null>(
+    localStorage.getItem('nickname')
   )
-  const [nickname, setNickname] = useState<string | undefined>(undefined)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -122,7 +124,7 @@ export function AppDrawer(props: Props) {
   useEffect(() => {
     const _preferredColor = props.user?.attributes
       ? props.user?.attributes['custom:preferredColor']
-      : undefined
+      : null
 
     setPreferredColor(_preferredColor)
     setNickname(props.user?.attributes?.nickname)
@@ -138,6 +140,11 @@ export function AppDrawer(props: Props) {
       })()
     }
   }, [props])
+
+  useEffect(() => {
+    if (preferredColor) localStorage.setItem('preferredColor', preferredColor)
+    if (nickname) localStorage.setItem('nickname', nickname)
+  }, [preferredColor, nickname])
 
   const MemoBody = React.memo(props.body)
 

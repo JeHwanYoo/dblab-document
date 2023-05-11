@@ -8,8 +8,8 @@ import { generateColorSet, generateRandomColorSet } from 'random-color-set'
 import type { AmplifyUser } from '@aws-amplify/ui'
 
 interface AvatarProps {
-  preferredColor?: string
-  nickname?: string
+  preferredColor?: string | null
+  nickname?: string | null
 }
 
 interface UserProps {
@@ -44,12 +44,15 @@ export const routes = [
         <Avatar
           sx={{
             bgcolor: backgroundColor,
+            width: 24,
+            height: 24,
           }}
           alt={props?.nickname ?? 'G'}
         >
           <span
             style={{
               color: textColor,
+              fontSize: 12,
             }}
           >
             {props?.nickname?.charAt(0).toUpperCase() ?? 'G'}
