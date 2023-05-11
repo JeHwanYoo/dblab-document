@@ -23,10 +23,20 @@
           "DOMAINALLOWLIST": "genmatefield.com",
           "deploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
           "s3Key": "amplify-builds/dblabdocument958c1eae958c1eaePreSignup-716f327a323759796268-build.zip"
+        },
+        "dblabdocumenta097b29aa097b29aPreSignup": {
+          "DOMAINALLOWLIST": "genmatefield.com",
+          "deploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
+          "s3Key": "amplify-builds/dblabdocumenta097b29aa097b29aPreSignup-4c56666836655655454d-build.zip"
+        },
+        "dblabdocumentf0c47c29f0c47c29PreSignup": {
+          "DOMAINALLOWLIST": "genmatefield.com",
+          "deploymentBucketName": "amplify-dblabdocument-main-221750-deployment",
+          "s3Key": "amplify-builds/dblabdocumentf0c47c29f0c47c29PreSignup-5a6357744b2f67627a45-build.zip"
         }
       },
       "auth": {
-        "dblabdocument958c1eae958c1eae": {}
+        "dblabdocumentf0c47c29f0c47c29": {}
       }
     }
   }

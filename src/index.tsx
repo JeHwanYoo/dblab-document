@@ -40,7 +40,7 @@ function App({ signOut, user }: Auth) {
       <BrowserRouter>
         <AppDrawer
           title="DBLab Document"
-          body={Body}
+          body={() => <Body user={user} />}
           signOut={signOut}
           user={user}
         />
@@ -49,13 +49,29 @@ function App({ signOut, user }: Auth) {
   )
 }
 
-function Body() {
+function Body({ user }: { user?: AmplifyUser }) {
   return (
     <section className="p-4">
       <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
+        {routes.map((route, index) => {
+          if (route.name === 'Profile') {
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={<route.element key={index} props={{ user }} />}
+              />
+            )
+          } else {
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={<route.element key={index} />}
+              />
+            )
+          }
+        })}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </section>

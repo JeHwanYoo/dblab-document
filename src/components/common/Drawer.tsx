@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CSSObject, styled, Theme, useTheme } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import MuiDrawer from '@mui/material/Drawer'
@@ -21,6 +21,8 @@ import { routes } from '../../routes'
 import type { AmplifyUser } from '@aws-amplify/ui'
 import { SignOut } from '@aws-amplify/ui-react/dist/types/components/Authenticator/Authenticator'
 import { Logout } from '@mui/icons-material'
+import { Amplify } from 'aws-amplify'
+import { generateRandomColorSet } from 'random-color-set'
 
 const drawerWidth = 240
 
@@ -104,6 +106,10 @@ export function AppDrawer(props: Props) {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const navigate = useNavigate()
+  const [preferredColor, setPreferredColor] = useState<string | undefined>(
+    undefined
+  )
+  const [nickname, setNickname] = useState<string | undefined>(undefined)
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -112,6 +118,26 @@ export function AppDrawer(props: Props) {
   const handleDrawerClose = () => {
     setOpen(false)
   }
+
+  useEffect(() => {
+    const _preferredColor = props.user?.attributes
+      ? props.user?.attributes['custom:preferredColor']
+      : undefined
+
+    setPreferredColor(_preferredColor)
+    setNickname(props.user?.attributes?.nickname)
+
+    if (!_preferredColor) {
+      ;(async () => {
+        const { backgroundColor } = generateRandomColorSet()
+        await Amplify.Auth.updateUserAttributes(props.user, {
+          'custom:preferredColor': backgroundColor,
+        })
+
+        setPreferredColor(backgroundColor)
+      })()
+    }
+  }, [props])
 
   const MemoBody = React.memo(props.body)
 
@@ -168,7 +194,16 @@ export function AppDrawer(props: Props) {
                     justifyContent: 'center',
                   }}
                 >
-                  {route.icon}
+                  {route.name === 'Profile' ? (
+                    <route.icon
+                      props={{
+                        preferredColor,
+                        nickname,
+                      }}
+                    />
+                  ) : (
+                    <route.icon />
+                  )}
                 </ListItemIcon>
                 <ListItemText
                   primary={route.name}

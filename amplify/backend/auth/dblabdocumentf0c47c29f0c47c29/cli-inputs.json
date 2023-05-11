@@ -1,16 +1,15 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "dblabdocument958c1eae_identitypool_958c1eae",
+    "identityPoolName": "dblabdocumentf0c47c29_identitypool_f0c47c29",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "dblabd958c1eae",
-    "userPoolName": "dblabdocument958c1eae_userpool_958c1eae",
+    "resourceNameTruncated": "dblabdf0c47c29",
+    "userPoolName": "dblabdocumentf0c47c29_userpool_f0c47c29",
     "autoVerifiedAttributes": [
       "email"
     ],
     "mfaConfiguration": "ON",
     "mfaTypes": [
-      "SMS Text Message",
       "TOTP"
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
@@ -34,10 +33,10 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "dblabd958c1eae_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "dblabdf0c47c29_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "958c1eae",
-    "resourceName": "dblabdocument958c1eae958c1eae",
+    "sharedId": "f0c47c29",
+    "resourceName": "dblabdocumentf0c47c29f0c47c29",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "thirdPartyAuth": false,

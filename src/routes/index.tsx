@@ -1,26 +1,61 @@
 import React from 'react'
 import { Editor } from './Editor'
-import { About } from './About'
+import { Profile } from './Profile'
 import { Finder } from './Finder'
-import { EditNote, Info, Search } from '@mui/icons-material'
+import { EditNote, Search } from '@mui/icons-material'
+import { Avatar } from '@mui/material'
+import { generateColorSet, generateRandomColorSet } from 'random-color-set'
+import type { AmplifyUser } from '@aws-amplify/ui'
+
+interface AvatarProps {
+  preferredColor?: string
+  nickname?: string
+}
+
+interface UserProps {
+  user?: AmplifyUser
+}
 
 export const routes = [
   {
     name: 'Finder',
     path: '/',
-    element: <Finder />,
-    icon: <Search />,
+    element: () => <Finder />,
+    icon: () => <Search />,
   },
   {
     name: 'Editor',
     path: '/editor',
-    element: <Editor />,
-    icon: <EditNote />,
+    element: () => <Editor />,
+    icon: () => <EditNote />,
   },
   {
-    name: 'About',
-    path: '/about',
-    element: <About />,
-    icon: <Info />,
+    name: 'Profile',
+    path: '/profile',
+    element: ({ props }: { props?: UserProps }) => (
+      <Profile user={props?.user} />
+    ),
+    icon: ({ props }: { props?: AvatarProps }) => {
+      const { backgroundColor, textColor } = props?.preferredColor
+        ? generateColorSet(props.preferredColor)
+        : generateRandomColorSet()
+
+      return (
+        <Avatar
+          sx={{
+            bgcolor: backgroundColor,
+          }}
+          alt={props?.nickname ?? 'G'}
+        >
+          <span
+            style={{
+              color: textColor,
+            }}
+          >
+            {props?.nickname?.charAt(0).toUpperCase() ?? 'G'}
+          </span>
+        </Avatar>
+      )
+    },
   },
 ]

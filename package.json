@@ -37,6 +37,7 @@
     "lib0": "^0.2.74",
     "postcss": "^8.4.23",
     "quill-cursors": "^4.0.2",
+    "random-color-set": "^0.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
