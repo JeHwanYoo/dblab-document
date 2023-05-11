@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { QuillEditor } from '../components/common/QuillEditor'
 import type ReactQuill from 'react-quill'
-import { createDocument, joinRoom, Document } from '../lib/connect'
+import { createDocument, Document, joinRoom } from '../lib/connect'
 import { QuillBinding } from 'y-quill'
 import type { WebrtcProvider } from 'y-webrtc'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -9,8 +9,15 @@ import { FormControl, InputLabel, OutlinedInput, Tooltip } from '@mui/material'
 import { CloudOff, CloudQueue } from '@mui/icons-material'
 import { uuidv4 } from 'lib0/random'
 import { createEditorURL } from '../lib/util'
+import { AmplifyUser } from '@aws-amplify/ui'
+import { getRandomColor } from 'random-color-set'
+import { faker } from '@faker-js/faker'
 
-export function Editor() {
+export interface Props {
+  user?: AmplifyUser
+}
+
+export function Editor(props: Props) {
   const [provider, setProvider] = useState<WebrtcProvider | null>(null)
   const [doc, setDoc] = useState<Document | null>(null)
   const [filename, setFilename] = useState<string | null>(null)
@@ -72,6 +79,15 @@ export function Editor() {
       const _provider: WebrtcProvider = joinRoom(_doc)
 
       new QuillBinding(_doc.getText('quill'), editor, _provider.awareness)
+
+      _provider.awareness.setLocalStateField('user', {
+        name:
+          props.user?.attributes?.nickname ??
+          faker.animal.cat() + ' ' + Date.now(),
+        color: props.user?.attributes
+          ? props.user.attributes['custom:preferredColor']
+          : getRandomColor(),
+      })
 
       _doc?.on('update', (_, __, doc) => {
         const info = doc.getMap('info')

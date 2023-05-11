@@ -54,22 +54,31 @@ function Body({ user }: { user?: AmplifyUser }) {
     <section className="p-4">
       <Routes>
         {routes.map((route, index) => {
-          if (route.name === 'Profile') {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={<route.element key={index} props={{ user }} />}
-              />
-            )
-          } else {
-            return (
-              <Route
-                key={index}
-                path={route.path}
-                element={<route.element key={index} />}
-              />
-            )
+          switch (route.name) {
+            case 'Profile':
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={<route.element key={index} props={{ user }} />}
+                />
+              )
+            case 'Editor':
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={<route.element key={index} user={user} />}
+                />
+              )
+            default:
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={<route.element key={index} />}
+                />
+              )
           }
         })}
         <Route path="*" element={<NotFound />} />

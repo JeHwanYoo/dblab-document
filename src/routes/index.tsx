@@ -1,5 +1,5 @@
 import React from 'react'
-import { Editor } from './Editor'
+import { Editor, Props as EditorProps } from './Editor'
 import { Profile } from './Profile'
 import { Finder } from './Finder'
 import { EditNote, Search } from '@mui/icons-material'
@@ -26,7 +26,7 @@ export const routes = [
   {
     name: 'Editor',
     path: '/editor',
-    element: () => <Editor />,
+    element: (props: EditorProps) => <Editor user={props.user} />,
     icon: () => <EditNote />,
   },
   {

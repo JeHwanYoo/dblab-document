@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ReactQuill, { Quill } from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import QuillCursors from 'quill-cursors'
+import './QuillEdtior.css'
 
 Quill.register('modules/cursors', QuillCursors)
 
@@ -29,6 +30,6 @@ export function QuillEditor(props: Props) {
       theme="snow"
       value={value}
       onChange={handleOnChange}
-    ></ReactQuill>
+    />
   )
 }
