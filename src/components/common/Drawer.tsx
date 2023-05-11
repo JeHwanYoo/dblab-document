@@ -122,8 +122,10 @@ export function AppDrawer(props: Props) {
   }
 
   useEffect(() => {
-    const _preferredColor = props.user?.attributes
-      ? props.user?.attributes['custom:preferredColor']
+    if (!props.user) return
+
+    const _preferredColor = props.user.attributes
+      ? props.user.attributes['custom:preferredColor']
       : null
 
     setPreferredColor(_preferredColor)
