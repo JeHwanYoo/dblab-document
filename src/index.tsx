@@ -15,6 +15,8 @@ import awsExports from './aws-exports'
 import NotFoundImage from './assets/404.jpg'
 import { withAuthenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
+import type { SignOut } from '@aws-amplify/ui-react/dist/types/components/Authenticator/Authenticator'
+import type { AmplifyUser } from '@aws-amplify/ui'
 
 Amplify.configure(awsExports)
 
@@ -27,11 +29,21 @@ root.render(
   </React.StrictMode>
 )
 
-function App() {
+interface Auth {
+  signOut?: SignOut
+  user?: AmplifyUser
+}
+
+function App({ signOut, user }: Auth) {
   return (
     <main>
       <BrowserRouter>
-        <AppDrawer title="DBLab Document" body={Body} />
+        <AppDrawer
+          title="DBLab Document"
+          body={Body}
+          signOut={signOut}
+          user={user}
+        />
       </BrowserRouter>
     </main>
   )

@@ -18,6 +18,9 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import { useNavigate } from 'react-router-dom'
 import { routes } from '../../routes'
+import type { AmplifyUser } from '@aws-amplify/ui'
+import { SignOut } from '@aws-amplify/ui-react/dist/types/components/Authenticator/Authenticator'
+import { Logout } from '@mui/icons-material'
 
 const drawerWidth = 240
 
@@ -93,6 +96,8 @@ const Drawer = styled(MuiDrawer, {
 interface Props {
   body: React.FunctionComponent
   title: string
+  user?: AmplifyUser
+  signOut?: SignOut
 }
 
 export function AppDrawer(props: Props) {
@@ -172,6 +177,28 @@ export function AppDrawer(props: Props) {
               </ListItemButton>
             </ListItem>
           ))}
+          <Divider />
+          <ListItem disablePadding sx={{ display: 'block' }}>
+            <ListItemButton
+              sx={{
+                minHeight: 48,
+                justifyContent: open ? 'initial' : 'center',
+                px: 2.5,
+              }}
+              onClick={props.signOut}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 0,
+                  mr: open ? 3 : 'auto',
+                  justifyContent: 'center',
+                }}
+              >
+                <Logout />
+              </ListItemIcon>
+              <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
