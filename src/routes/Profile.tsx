@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import { AmplifyUser } from '@aws-amplify/ui'
 import {
+  Avatar,
   FormControl,
   FormHelperText,
   InputLabel,
   OutlinedInput,
 } from '@mui/material'
+import { MuiColorInput } from 'mui-color-input'
+import { generateColorSet } from 'random-color-set'
 
 interface Props {
   user?: AmplifyUser
@@ -15,12 +18,18 @@ interface Props {
 export function Profile({ user }: Props) {
   const initNickname = user?.attributes?.nickname
   const initName = user?.attributes?.name
+  const initPreferredColor = user?.attributes
+    ? user?.attributes['custom:preferredColor']
+    : '#ffffff'
+  const { textColor: initTextColor } = generateColorSet(initPreferredColor)
 
   const [nickname, setNickname] = useState(initNickname)
   const [name, setName] = useState(initName)
   const [dirty, setDirty] = useState(false)
   const [password, setPassword] = useState('')
   const [matchedPassword, setMatchedPassword] = useState('')
+  const [preferredColor, setPreferredColor] = useState(initPreferredColor)
+  const [textColor, setTextColor] = useState(initTextColor)
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
@@ -40,6 +49,10 @@ export function Profile({ user }: Props) {
     setName(event.target.value)
   }
 
+  const handlePreferredColorChange = (newValue: string) => {
+    setPreferredColor(newValue)
+  }
+
   const handleSave = () => {
     // Save changes to backend API
     setDirty(false)
@@ -50,12 +63,44 @@ export function Profile({ user }: Props) {
       initNickname !== nickname ||
         initName !== name ||
         password !== '' ||
-        matchedPassword !== ''
+        matchedPassword !== '' ||
+        initPreferredColor !== preferredColor
     )
-  }, [nickname, name, password, matchedPassword])
+  }, [nickname, name, password, matchedPassword, preferredColor])
+
+  useEffect(() => {
+    const { textColor } = generateColorSet(preferredColor)
+    setTextColor(textColor)
+  }, [preferredColor])
 
   return (
     <>
+      <section className="mb-8 flex gap-x-4 items-center">
+        <MuiColorInput
+          format="hex"
+          fallbackValue="#ffffff"
+          isAlphaHidden
+          value={preferredColor}
+          onChange={handlePreferredColorChange}
+        />
+        <Avatar
+          sx={{
+            bgcolor: preferredColor,
+            width: 48,
+            height: 48,
+          }}
+          alt={nickname ?? 'G'}
+        >
+          <span
+            style={{
+              color: textColor,
+              fontSize: 24,
+            }}
+          >
+            {nickname?.charAt(0).toUpperCase() ?? 'G'}
+          </span>
+        </Avatar>
+      </section>
       <section className="mb-8">
         <FormControl fullWidth>
           <InputLabel htmlFor="outlined-nickname">닉네임</InputLabel>

@@ -36,6 +36,7 @@
     "flowbite-react": "^0.4.4",
     "husky": "^8.0.3",
     "lib0": "^0.2.74",
+    "mui-color-input": "^1.0.5",
     "postcss": "^8.4.23",
     "quill-cursors": "^4.0.2",
     "random-color-set": "^0.1.2",
