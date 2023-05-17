@@ -42,12 +42,22 @@ export function Editor(props: Props) {
 
     setFilename(_filename as string)
     setFilepath(_path)
+  }, [])
 
-    return () => {
+  useEffect(() => {
+    const handlePopstate = () => {
+      console.log('pop', doc)
       provider?.disconnect()
       doc?.destroy()
     }
-  }, [])
+
+    window.addEventListener('popstate', handlePopstate)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopstate)
+      handlePopstate()
+    }
+  }, [doc, provider])
 
   useEffect(() => {
     if (filename === null) return
