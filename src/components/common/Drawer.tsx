@@ -186,41 +186,41 @@ export function AppDrawer(props: Props) {
         </DrawerHeader>
         <Divider />
         <List>
-          {routes.map((route, index) => (
-            <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-                onClick={() => navigate(route.path)}
-              >
-                <ListItemIcon
+          {routes
+            .filter((route) => !route.hidden)
+            .map((route, index) => (
+              <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
+                  onClick={() => navigate(route.path)}
                 >
-                  {route.name === 'Profile' ? (
-                    <route.icon
-                      props={{
-                        preferredColor,
-                        nickname,
-                      }}
-                    />
-                  ) : (
-                    <route.icon />
-                  )}
-                </ListItemIcon>
-                <ListItemText
-                  primary={route.name}
-                  sx={{ opacity: open ? 1 : 0 }}
-                />
-              </ListItemButton>
-            </ListItem>
-          ))}
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {route.name === 'Profile' ? (
+                      <route.icon
+                        preferredColor={preferredColor}
+                        nickname={nickname}
+                      />
+                    ) : (
+                      <route.icon />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={route.name}
+                    sx={{ opacity: open ? 1 : 0 }}
+                  />
+                </ListItemButton>
+              </ListItem>
+            ))}
           <Divider />
           <ListItem disablePadding sx={{ display: 'block' }}>
             <ListItemButton

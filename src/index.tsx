@@ -60,7 +60,7 @@ function Body({ user }: { user?: AmplifyUser }) {
                 <Route
                   key={index}
                   path={route.path}
-                  element={<route.element key={index} props={{ user }} />}
+                  element={<route.element key={index} user={user} />}
                 />
               )
             case 'Editor':

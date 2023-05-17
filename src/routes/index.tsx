@@ -6,6 +6,7 @@ import { EditNote, Search } from '@mui/icons-material'
 import { Avatar } from '@mui/material'
 import { generateColorSet, generateRandomColorSet } from 'random-color-set'
 import type { AmplifyUser } from '@aws-amplify/ui'
+import { PasswordChange } from './PasswordChange'
 
 interface AvatarProps {
   preferredColor?: string | null
@@ -26,16 +27,14 @@ export const routes = [
   {
     name: 'Editor',
     path: '/editor',
-    element: (props: EditorProps) => <Editor user={props.user} />,
+    element: (props?: EditorProps) => <Editor user={props?.user} />,
     icon: () => <EditNote />,
   },
   {
     name: 'Profile',
     path: '/profile',
-    element: ({ props }: { props?: UserProps }) => (
-      <Profile user={props?.user} />
-    ),
-    icon: ({ props }: { props?: AvatarProps }) => {
+    element: (props?: UserProps) => <Profile user={props?.user} />,
+    icon: (props?: AvatarProps) => {
       const { backgroundColor, textColor } = props?.preferredColor
         ? generateColorSet(props.preferredColor)
         : generateRandomColorSet()
@@ -60,5 +59,12 @@ export const routes = [
         </Avatar>
       )
     },
+  },
+  {
+    name: 'PasswordChange',
+    path: '/password-change',
+    element: () => <PasswordChange />,
+    icon: () => <></>,
+    hidden: true,
   },
 ]

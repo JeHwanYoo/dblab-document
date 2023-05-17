@@ -12,6 +12,8 @@ import { MuiColorInput } from 'mui-color-input'
 import { generateColorSet } from 'random-color-set'
 import { Refresh } from '@mui/icons-material'
 import Box from '@mui/material/Box'
+import { Amplify } from 'aws-amplify'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
   user?: AmplifyUser
@@ -28,21 +30,10 @@ export function Profile({ user }: Props) {
   const [nickname, setNickname] = useState(initNickname)
   const [name, setName] = useState(initName)
   const [dirty, setDirty] = useState(false)
-  const [password, setPassword] = useState('')
-  const [matchedPassword, setMatchedPassword] = useState('')
   const [preferredColor, setPreferredColor] = useState(initPreferredColor)
   const [textColor, setTextColor] = useState(initTextColor)
   const [errors, setErrors] = useState<Record<string, string>>({})
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
-
-  const handleMatchedPasswordChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setMatchedPassword(event.target.value)
-  }
+  const navigate = useNavigate()
 
   const handleNickNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(event.target.value)
@@ -72,7 +63,7 @@ export function Profile({ user }: Props) {
     setPreferredColor(newValue)
   }
 
-  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     setErrors({})
@@ -83,14 +74,23 @@ export function Profile({ user }: Props) {
     if (!nickname?.trim()) {
       errors.nickname = '필수 입력입니다.'
     }
-    if (matchedPassword.trim() !== password.trim()) {
-      errors.matchedPassword = '비밀번호가 일치하지 않습니다.'
-    }
 
     setErrors(errors)
 
     if (Object.keys(errors).length > 0) {
-      return
+      return false
+    }
+
+    try {
+      await Amplify.Auth.updateUserAttributes(user, {
+        nickname: nickname,
+        name: name,
+        'custom:preferredColor': preferredColor,
+      })
+    } catch (e) {
+      console.error(e)
+      alert('업데이트에 실패했습니다.')
+      return false
     }
 
     // Save changes to backend API
@@ -101,11 +101,9 @@ export function Profile({ user }: Props) {
     setDirty(
       initNickname !== nickname ||
         initName !== name ||
-        password !== '' ||
-        matchedPassword !== '' ||
         initPreferredColor !== preferredColor
     )
-  }, [nickname, name, password, matchedPassword, preferredColor])
+  }, [nickname, name, preferredColor])
 
   useEffect(() => {
     const { textColor } = generateColorSet(preferredColor)
@@ -179,44 +177,23 @@ export function Profile({ user }: Props) {
         </FormControl>
       </section>
       <section className="mb-8">
-        <FormControl fullWidth>
-          <InputLabel htmlFor="outlined-password">Password</InputLabel>
-          <OutlinedInput
-            id="outlined-password"
-            label="path"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-        </FormControl>
-      </section>
-      <section className="mb-8">
-        <FormControl fullWidth>
-          <InputLabel htmlFor="outlined-matched-password">
-            Matched Password
-          </InputLabel>
-          <OutlinedInput
-            id="outlined-matched-password"
-            label="path"
-            type="password"
-            value={matchedPassword}
-            onChange={handleMatchedPasswordChange}
-            disabled={!password}
-            error={password !== matchedPassword}
-          />
-          <FormHelperText>
-            {password !== matchedPassword && '패스워드가 일치하지 않습니다.'}
-          </FormHelperText>
-        </FormControl>
+        <Button
+          type="button"
+          sx={{ width: 300, height: 50 }}
+          variant="contained"
+          onClick={() => navigate('/password-change')}
+        >
+          패스워드 변경
+        </Button>
       </section>
       <section>
         <Button
           type="submit"
           sx={{ width: 300, height: 50 }}
           variant="contained"
-          disabled={!dirty || password !== matchedPassword}
+          disabled={!dirty}
         >
-          Save
+          변경사항 저장
         </Button>
       </section>
     </Box>
