@@ -1,100 +1,95 @@
 import React, { useEffect, useState } from 'react'
-import { TreeItem, TreeView } from '@mui/lab'
-import { useNavigate } from 'react-router-dom'
-import { Article, Folder, FolderOpen } from '@mui/icons-material'
-import { CircularProgress } from '@mui/material'
-import { createEditorURL, Leaf, Tree } from '../lib/util'
-
-interface Item {
-  id: string
-  name: string
-}
-
-const mockItems: Item[] = [
-  {
-    id: '789f2c68-ccfc-475e-bad9-e253ac3f43a7',
-    name: '부동산 리포트/11월/report-1.md',
-  },
-  {
-    id: 'b3557005-15af-4b48-8804-aa5b1474fd74',
-    name: '부동산 리포트/11월/report-2.md',
-  },
-  {
-    id: '329274e7-6415-4454-bff3-e6b76869d9cd',
-    name: '부동산 리포트/12월/report.md',
-  },
-]
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  Avatar,
+  Breadcrumbs,
+  CircularProgress,
+  List,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemText,
+  Typography,
+} from '@mui/material'
+import { lsWithDepth } from '../lib/aws'
+import { FileSystem } from '../API'
+import { Folder, InsertDriveFile } from '@mui/icons-material'
 
 export function Finder() {
-  const [items, setItems] = useState<Item[]>([])
-  const [root, setRoot] = useState<Tree>({})
+  const [items, setItems] = useState<FileSystem[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [name, setName] = useState<string | null>(null)
+  const [depth, setDepth] = useState<number | null>(null)
+  const [pageSize, setPageSize] = useState<number | null>(10)
+  const [nextToken, setNextToken] = useState<string | null | undefined>(null)
   const navigate = useNavigate()
+  const location = useLocation()
 
-  function parseDepth(items: Item[]) {
-    return items.reduce((acc, item) => {
-      const nameParts = item.name.split('/')
-      let nestedObj: Tree = acc
-      nameParts.forEach((part, index) => {
-        if (index === nameParts.length - 1) {
-          nestedObj[part] = {
-            id: item.id,
-            path: nameParts.slice(0, -1).join('/'),
-          }
-        } else {
-          nestedObj[part] = nestedObj[part] || {}
-          nestedObj = nestedObj[part] as Tree
-        }
-      })
-      return acc
-    }, {})
+  async function fetchItems() {
+    setIsLoading(true)
+
+    try {
+      const _items = await lsWithDepth(
+        depth ?? 0,
+        name ?? '',
+        pageSize ?? 10,
+        nextToken ?? undefined
+      )
+      setItems(_items || [])
+    } catch (e) {
+      console.log(e)
+    }
+
+    setIsLoading(false)
   }
 
-  function renderTree(root: Tree) {
-    return Object.entries(root).map(([key, value]) => {
-      if (!value.id) {
-        return (
-          <TreeItem
-            key={key}
-            nodeId={key}
-            label={key}
-            collapseIcon={<FolderOpen />}
-            expandIcon={<Folder />}
-          >
-            {renderTree(value as Tree)}
-          </TreeItem>
-        )
-      }
+  function search(
+    _depth: number,
+    _name: string,
+    _pageSize: number,
+    _nextToken?: string
+  ) {
+    const querystring = new URLSearchParams(location.search)
 
-      return (
-        <TreeItem
-          key={key}
-          nodeId={key}
-          label={key}
-          icon={<Article />}
-          onClick={() => navigate(createEditorURL(value as Leaf, key))}
-        />
-      )
-    })
+    querystring.set('depth', String(_depth))
+    querystring.set('name', _name)
+    querystring.set('pageSize', String(_pageSize))
+    if (nextToken) querystring.set('nextToken', _nextToken ?? '')
+
+    navigate(`/?${querystring.toString()}`)
+  }
+
+  function openFile(_id: string, _path: string, _filename: string) {
+    navigate(`/editor?id=${_id}&filename=${_filename}&path=${_path}`)
   }
 
   useEffect(() => {
-    ;(async function fetchItems() {
-      // TODO GET LIST from S3
-      setIsLoading(true)
+    const querystring = new URLSearchParams(location.search)
 
-      await (function delay() {
-        return new Promise((resolve) => setTimeout(resolve, 500))
-      })()
+    const _depth = querystring.has('depth')
+      ? Number(querystring.get('depth'))
+      : null
+    const _name = querystring.get('name')
+    const _pageSize = querystring.has('pageSize')
+      ? Number(querystring.get('pageSize'))
+      : null
+    const _nextToken = querystring.get('nextToken')
 
-      setIsLoading(false)
-      setItems(mockItems)
-    })()
+    if (_depth === null || _name === null || _pageSize === null) {
+      navigate(`/?depth=0&name=/&pageSize=10`)
+      return
+    }
+
+    setDepth(_depth)
+    setName(_name)
+    setPageSize(_pageSize)
+    setNextToken(_nextToken ? _nextToken : undefined)
   }, [])
 
   useEffect(() => {
-    setRoot(parseDepth(items))
-  }, [items])
+    ;(async () => {
+      await fetchItems()
+    })()
+  }, [depth, name, pageSize, nextToken])
 
   if (isLoading) {
     return (
@@ -104,9 +99,61 @@ export function Finder() {
     )
   }
 
-  if (Object.keys(root).length === 0) {
-    return <p className="text-center">조회된 문서가 없습니다</p>
-  } else {
-    return <TreeView>{renderTree(root)}</TreeView>
-  }
+  return (
+    <>
+      <Breadcrumbs aria-label="breadcrumb">
+        {name?.split('/').map((item, index) => (
+          <Typography
+            key={index}
+            className="cursor-pointer"
+            color="text.primary"
+            onClick={() =>
+              search(
+                index,
+                name
+                  ?.split('/')
+                  .slice(0, index + 1)
+                  .join('/'),
+                pageSize ?? 10,
+                nextToken ?? undefined
+              )
+            }
+          >
+            {item}
+          </Typography>
+        ))}
+      </Breadcrumbs>
+      <List dense={false}>
+        {items.map((item: FileSystem) => (
+          <ListItemButton
+            key={item.name}
+            onClick={() =>
+              item.isDirectory
+                ? search(
+                    item.depth + 1,
+                    item.name,
+                    pageSize ?? 10,
+                    nextToken ?? undefined
+                  )
+                : openFile(
+                    item.id,
+                    item.name.split('/').slice(0, -1).join('/'),
+                    item.name.split('/').at(-1) ?? ''
+                  )
+            }
+          >
+            <ListItemAvatar>
+              <Avatar>
+                {item.isDirectory ? <Folder /> : <InsertDriveFile />}
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={item.name.split('/').at(-1)}
+              secondary={new Date(item.updatedAt).toLocaleString()}
+            />
+          </ListItemButton>
+        ))}
+      </List>
+    </>
+  )
 }

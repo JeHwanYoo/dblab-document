@@ -1,3 +1,7 @@
 node_modules
 build
 amplify
+src/models
+
+amplify-codegen-temp/models
+src/ui-components

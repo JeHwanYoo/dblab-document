@@ -37,6 +37,12 @@
       },
       "auth": {
         "dblabdocumentf0c47c29f0c47c29": {}
+      },
+      "storage": {
+        "s3611ab6a1": {}
+      },
+      "api": {
+        "dblabdocument": {}
       }
     }
   }

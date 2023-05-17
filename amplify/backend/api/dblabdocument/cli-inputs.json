@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "dblabdocument",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authdblabdocumentf0c47c29f0c47c29"
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "AppSyncApiName": "dblabdocument",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authdblabdocumentf0c47c29f0c47c29",
+      "Outputs.UserPoolId"
+    ]
+  },
+  "AuthModeLastUpdated": "2023-05-17T07:42:40.379Z"
+}

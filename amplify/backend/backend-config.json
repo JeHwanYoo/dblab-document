@@ -1,4 +1,30 @@
 {
+  "api": {
+    "dblabdocument": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "dblabdocumentf0c47c29f0c47c29"
+        }
+      ],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authdblabdocumentf0c47c29f0c47c29"
+            }
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
   "auth": {
     "dblabdocumentf0c47c29f0c47c29": {
       "customAuth": false,
@@ -157,6 +183,13 @@
           "resourceName": "dblabdocumentf0c47c29f0c47c29PreSignup"
         }
       ]
+    }
+  },
+  "storage": {
+    "s3611ab6a1": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     }
   }
 }

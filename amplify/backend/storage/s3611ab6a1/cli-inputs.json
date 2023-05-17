@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3611ab6a1",
+  "policyUUID": "611ab6a1",
+  "bucketName": "dblabdocument6f444885bd81427686cb3217380c9b0c",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
