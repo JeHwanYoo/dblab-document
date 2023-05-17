@@ -33,9 +33,12 @@ export function Editor(props: Props) {
 
     if (!_filename) {
       const uuid = uuidv4()
-      navigate(createEditorURL({ id: uuid, path: '' }, '새문서' + uuid), {
-        replace: true,
-      })
+      navigate(
+        createEditorURL({ id: uuid, path: _path ?? '' }, '새문서' + uuid),
+        {
+          replace: true,
+        }
+      )
 
       setFilepath('')
     }
@@ -46,7 +49,6 @@ export function Editor(props: Props) {
 
   useEffect(() => {
     const handlePopstate = () => {
-      console.log('pop', doc)
       provider?.disconnect()
       doc?.destroy()
     }

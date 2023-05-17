@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import {
   Avatar,
   Breadcrumbs,
+  Button,
+  ButtonGroup,
   CircularProgress,
   List,
   ListItemAvatar,
@@ -12,7 +14,8 @@ import {
 } from '@mui/material'
 import { lsWithDepth } from '../lib/aws'
 import { FileSystem } from '../API'
-import { Folder, InsertDriveFile } from '@mui/icons-material'
+import { Add, Folder, InsertDriveFile } from '@mui/icons-material'
+import { uuidv4 } from 'lib0/random'
 
 export function Finder() {
   const [items, setItems] = useState<FileSystem[]>([])
@@ -59,6 +62,7 @@ export function Finder() {
   }
 
   function openFile(_id: string, _path: string, _filename: string) {
+    console.log('given', _path)
     navigate(`/editor?id=${_id}&filename=${_filename}&path=${_path}`)
   }
 
@@ -101,28 +105,45 @@ export function Finder() {
 
   return (
     <>
-      <Breadcrumbs aria-label="breadcrumb">
-        {name?.split('/').map((item, index) => (
-          <Typography
-            key={index}
-            className="cursor-pointer"
-            color="text.primary"
-            onClick={() =>
-              search(
-                index,
-                name
-                  ?.split('/')
-                  .slice(0, index + 1)
-                  .join('/'),
-                pageSize ?? 10,
-                nextToken ?? undefined
-              )
-            }
+      <section className="flex justify-between">
+        <Breadcrumbs aria-label="breadcrumb">
+          {name?.split('/').map((item, index) => (
+            <Typography
+              key={index}
+              className="cursor-pointer"
+              color="text.primary"
+              onClick={() =>
+                search(
+                  index,
+                  name
+                    ?.split('/')
+                    .slice(0, index + 1)
+                    .join('/'),
+                  pageSize ?? 10,
+                  nextToken ?? undefined
+                )
+              }
+            >
+              {item}
+            </Typography>
+          ))}
+        </Breadcrumbs>
+        <ButtonGroup
+          variant="contained"
+          aria-label="outlined primary button group"
+        >
+          <Button
+            startIcon={<Add />}
+            onClick={() => {
+              console.log(name)
+
+              openFile(uuidv4(), name ?? '', '')
+            }}
           >
-            {item}
-          </Typography>
-        ))}
-      </Breadcrumbs>
+            추가
+          </Button>
+        </ButtonGroup>
+      </section>
       <List dense={false}>
         {items.map((item: FileSystem) => (
           <ListItemButton
