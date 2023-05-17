@@ -12,6 +12,7 @@ import { createEditorURL } from '../lib/util'
 import { AmplifyUser } from '@aws-amplify/ui'
 import { getRandomColor } from 'random-color-set'
 import { faker } from '@faker-js/faker'
+import { Back } from '../components/common/Back'
 
 export interface Props {
   user?: AmplifyUser
@@ -146,16 +147,19 @@ export function Editor(props: Props) {
   return (
     <section>
       <section>
-        <section className="px-1">
-          {provider?.connected ? (
-            <Tooltip title="connected">
-              <CloudQueue color="success" />
-            </Tooltip>
-          ) : (
-            <Tooltip title="disconnected">
-              <CloudOff color="secondary" />
-            </Tooltip>
-          )}
+        <section className="px-1 flex items-center justify-between">
+          <section className="flex items-center">
+            <Back />
+            {provider?.connected ? (
+              <Tooltip title="connected">
+                <CloudQueue color="success" />
+              </Tooltip>
+            ) : (
+              <Tooltip title="disconnected">
+                <CloudOff color="secondary" />
+              </Tooltip>
+            )}
+          </section>
         </section>
         <section className="my-4">
           <FormControl fullWidth>

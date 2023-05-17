@@ -16,6 +16,7 @@ import { lsWithDepth } from '../lib/aws'
 import { FileSystem } from '../API'
 import { Add, Folder, InsertDriveFile } from '@mui/icons-material'
 import { uuidv4 } from 'lib0/random'
+import { Back } from '../components/common/Back'
 
 export function Finder() {
   const [items, setItems] = useState<FileSystem[]>([])
@@ -105,29 +106,32 @@ export function Finder() {
 
   return (
     <>
-      <section className="flex justify-between">
-        <Breadcrumbs aria-label="breadcrumb">
-          {name?.split('/').map((item, index) => (
-            <Typography
-              key={index}
-              className="cursor-pointer"
-              color="text.primary"
-              onClick={() =>
-                search(
-                  index,
-                  name
-                    ?.split('/')
-                    .slice(0, index + 1)
-                    .join('/'),
-                  pageSize ?? 10,
-                  nextToken ?? undefined
-                )
-              }
-            >
-              {item}
-            </Typography>
-          ))}
-        </Breadcrumbs>
+      <section className="flex justify-between items-center">
+        <section className="flex items-center">
+          <Back />
+          <Breadcrumbs className="inline-block" aria-label="breadcrumb">
+            {name?.split('/').map((item, index) => (
+              <Typography
+                key={index}
+                className="cursor-pointer"
+                color="text.primary"
+                onClick={() =>
+                  search(
+                    index,
+                    name
+                      ?.split('/')
+                      .slice(0, index + 1)
+                      .join('/'),
+                    pageSize ?? 10,
+                    nextToken ?? undefined
+                  )
+                }
+              >
+                {item}
+              </Typography>
+            ))}
+          </Breadcrumbs>
+        </section>
         <ButtonGroup
           variant="contained"
           aria-label="outlined primary button group"
