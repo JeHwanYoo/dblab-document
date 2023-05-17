@@ -10,6 +10,8 @@ import {
 } from '@mui/material'
 import { MuiColorInput } from 'mui-color-input'
 import { generateColorSet } from 'random-color-set'
+import { Refresh } from '@mui/icons-material'
+import Box from '@mui/material/Box'
 
 interface Props {
   user?: AmplifyUser
@@ -30,6 +32,7 @@ export function Profile({ user }: Props) {
   const [matchedPassword, setMatchedPassword] = useState('')
   const [preferredColor, setPreferredColor] = useState(initPreferredColor)
   const [textColor, setTextColor] = useState(initTextColor)
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
@@ -43,17 +46,53 @@ export function Profile({ user }: Props) {
 
   const handleNickNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNickname(event.target.value)
+
+    if (!event.target.value) {
+      errors['nickname'] = '필수 입력입니다.'
+      setErrors(errors)
+    } else {
+      delete errors['nickname']
+      setErrors(errors)
+    }
   }
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
+
+    if (!event.target.value) {
+      errors['name'] = '필수 입력입니다.'
+      setErrors(errors)
+    } else {
+      delete errors['name']
+      setErrors(errors)
+    }
   }
 
   const handlePreferredColorChange = (newValue: string) => {
     setPreferredColor(newValue)
   }
 
-  const handleSave = () => {
+  const handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    setErrors({})
+
+    if (!name?.trim()) {
+      errors.name = '필수 입력입니다.'
+    }
+    if (!nickname?.trim()) {
+      errors.nickname = '필수 입력입니다.'
+    }
+    if (matchedPassword.trim() !== password.trim()) {
+      errors.matchedPassword = '비밀번호가 일치하지 않습니다.'
+    }
+
+    setErrors(errors)
+
+    if (Object.keys(errors).length > 0) {
+      return
+    }
+
     // Save changes to backend API
     setDirty(false)
   }
@@ -74,7 +113,7 @@ export function Profile({ user }: Props) {
   }, [preferredColor])
 
   return (
-    <>
+    <Box component="form" onSubmit={handleSubmit}>
       <section className="mb-8 flex gap-x-4 items-center">
         <MuiColorInput
           format="hex"
@@ -100,27 +139,43 @@ export function Profile({ user }: Props) {
             {nickname?.charAt(0).toUpperCase() ?? 'G'}
           </span>
         </Avatar>
+        <Button
+          type="button"
+          onClick={() => setPreferredColor(initPreferredColor)}
+        >
+          <Refresh />
+        </Button>
       </section>
       <section className="mb-8">
         <FormControl fullWidth>
           <InputLabel htmlFor="outlined-nickname">닉네임</InputLabel>
           <OutlinedInput
+            required
+            error={!!errors['nickname']}
             id="outlined-nickname"
             label="path"
             value={nickname}
             onChange={handleNickNameChange}
           />
+          {!!errors['nickname'] && (
+            <FormHelperText> {errors['nickname']} </FormHelperText>
+          )}
         </FormControl>
       </section>
       <section className="mb-8">
         <FormControl fullWidth>
           <InputLabel htmlFor="outlined-name">이름</InputLabel>
           <OutlinedInput
+            required
+            error={!!errors['name']}
             id="outlined-name"
             label="path"
             value={name}
             onChange={handleNameChange}
           />
+          {!!errors['name'] && (
+            <FormHelperText> {errors['name']} </FormHelperText>
+          )}
         </FormControl>
       </section>
       <section className="mb-8">
@@ -160,11 +215,10 @@ export function Profile({ user }: Props) {
           sx={{ width: 300, height: 50 }}
           variant="contained"
           disabled={!dirty || password !== matchedPassword}
-          onClick={handleSave}
         >
           Save
         </Button>
       </section>
-    </>
+    </Box>
   )
 }
