@@ -13,6 +13,7 @@ import { AmplifyUser } from '@aws-amplify/ui'
 import { getRandomColor } from 'random-color-set'
 import { faker } from '@faker-js/faker'
 import { Back } from '../components/common/Back'
+import { readFile } from '../lib/aws'
 
 export interface Props {
   user?: AmplifyUser
@@ -27,6 +28,7 @@ export function Editor(props: Props) {
   const navigate = useNavigate()
   const component = useRef<ReactQuill>(null)
 
+  // init state
   useEffect(() => {
     const querystring = new URLSearchParams(location.search)
     const _filename = querystring.get('filename')
@@ -48,6 +50,7 @@ export function Editor(props: Props) {
     setFilepath(_path)
   }, [])
 
+  // init events
   useEffect(() => {
     const handlePopstate = () => {
       provider?.disconnect()
@@ -55,6 +58,15 @@ export function Editor(props: Props) {
     }
 
     window.addEventListener('popstate', handlePopstate)
+    ;(async () => {
+      if (doc) {
+        const content = await readFile(filepath + '/' + filename)
+
+        if (doc.getText('quill').length === 0) {
+          if (content) doc.getText('quill').insert(0, content)
+        }
+      }
+    })()
 
     return () => {
       window.removeEventListener('popstate', handlePopstate)
@@ -62,6 +74,7 @@ export function Editor(props: Props) {
     }
   }, [doc, provider])
 
+  // init doc
   useEffect(() => {
     if (filename === null) return
 

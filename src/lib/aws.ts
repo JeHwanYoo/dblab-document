@@ -83,3 +83,16 @@ export async function lsWithDepth(
     | FileSystem[]
     | undefined
 }
+
+export async function readFile(path: string) {
+  const key = path.startsWith('/') ? path.slice(1) : path
+
+  const { Body } = await Storage.get(key, { download: true })
+
+  switch (true) {
+    case Body instanceof Blob:
+      return (Body as Blob).text()
+    default:
+      return null
+  }
+}
