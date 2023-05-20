@@ -27,6 +27,7 @@ export function Editor(props: Props) {
   const location = useLocation()
   const navigate = useNavigate()
   const component = useRef<ReactQuill>(null)
+  const uuid = uuidv4()
 
   // init state
   useEffect(() => {
@@ -52,12 +53,18 @@ export function Editor(props: Props) {
 
   // init events
   useEffect(() => {
-    const handlePopstate = () => {
+    const _info = doc?.getMap('info')
+
+    const handlePopstate = (deleteHost: boolean) => {
+      if (deleteHost) {
+        console.log('out', uuid, _info?.get('host'))
+        _info?.set('host', null)
+      }
       provider?.disconnect()
       doc?.destroy()
     }
 
-    window.addEventListener('popstate', handlePopstate)
+    window.addEventListener('popstate', () => handlePopstate(true))
     ;(async () => {
       if (doc) {
         const content = await readFile(filepath + '/' + filename)
@@ -69,8 +76,8 @@ export function Editor(props: Props) {
     })()
 
     return () => {
-      window.removeEventListener('popstate', handlePopstate)
-      handlePopstate()
+      window.removeEventListener('popstate', () => handlePopstate(true))
+      handlePopstate(false)
     }
   }, [doc, provider])
 
@@ -115,12 +122,22 @@ export function Editor(props: Props) {
           : getRandomColor(),
       })
 
+      // doc update
       _doc?.on('update', (_, __, doc) => {
-        const info = doc.getMap('info')
-        const _name = info.get('name')
-        const _path = info.get('path')
-        const renameFilenameId = info.get('rename:filename')
-        const renamePathId = info.get('rename:path')
+        const _info = doc.getMap('info')
+        const _name = _info.get('name')
+        const _path = _info.get('path')
+        const renameFilenameId = _info.get('rename:filename')
+        const renamePathId = _info.get('rename:path')
+        const _text = doc.getText('quill')
+        const _host = _info.get('host')
+
+        console.log('update!', uuid, _host)
+
+        if (!_host) {
+          console.log('you are host now', uuid)
+          _info?.set('host', uuid)
+        }
 
         if (
           renameFilenameId &&
@@ -132,6 +149,10 @@ export function Editor(props: Props) {
         if (renamePathId && _provider.awareness.clientID !== renamePathId) {
           setFilepath(_path)
         }
+
+        // if (uuid === _host) {
+        //   console.log('updated', uuid, _text.toString())
+        // }
       })
 
       setProvider(_provider)
